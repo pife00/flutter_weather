@@ -15,11 +15,45 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  var temp;
+  var description;
+  var currenly;
+  var humidity;
+  var windSpeed;
+  final API = "2bd2c387e35895f4fbbae66577a5a17f";
+  String city = "Quibdo";
+  
+
+  Future getWeather() async{
+    String URL = "http://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=$API";
+    var response = await http.get(Uri.parse(URL));
+
+    if(response.statusCode == 200){
+      var result = jsonDecode(response.body);
+      setState(() {
+        this.temp = result['main']['temp'];
+        this.description = result['weather'][0]['description'];
+        this.currenly = result['weather'][0]['main'];
+        this.humidity = result['main']['humidity'];
+        this.windSpeed = result['wind']['speed'];
+      });
+    }
+    
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this.getWeather();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Weather", textAlign: TextAlign.center),
+        title: Text("Weather"),
+        centerTitle: true,
         backgroundColor: Colors.redAccent,
       ),
       body: Column(
@@ -42,7 +76,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
                 Text(
-                  "32\u00B0",
+                  temp != null ? "$temp\u00B0":"loading",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 40.0,
@@ -52,7 +86,7 @@ class _MyAppState extends State<MyApp> {
                 Padding(
                   padding: EdgeInsets.only(top: 10.0),
                   child: Text(
-                    "Rain",
+                   currenly != null ? "$currenly":"loading",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 14.0,
@@ -73,23 +107,23 @@ class _MyAppState extends State<MyApp> {
                     "temperature",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
                   ),
-                  trailing: Text("52\u00B0"),
+                  trailing: Text(temp != null ? "$temp\u00B0":"loading"),
                 ),
                 ListTile(
                   leading: FaIcon(FontAwesomeIcons.cloud),
                   title: Text(
-                    "Weather",
+                    "Description",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
                   ),
-                  trailing: Text("52\u00B0"),
+                  trailing: Text(description != null ? "$description\u00B0":"loading"),
                 ),
                 ListTile(
                   leading: FaIcon(FontAwesomeIcons.sun),
                   title: Text(
-                    "Humadity",
+                    "Humidity",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
                   ),
-                  trailing: Text("52\u00B0"),
+                  trailing: Text(humidity != null ? "$humidity\u00B0":"loading"),
                 ),
                 ListTile(
                   leading: FaIcon(FontAwesomeIcons.wind),
@@ -97,7 +131,7 @@ class _MyAppState extends State<MyApp> {
                     "Wind Speed",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
                   ),
-                  trailing: Text("52\u00B0"),
+                  trailing: Text(windSpeed != null ? "$windSpeed\u00B0":"Loading"),
                 ),
               ],
             ),
