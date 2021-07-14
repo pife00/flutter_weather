@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
   var currenly;
   var humidity;
   var windSpeed;
-  final API = "2bd2c387e35895f4fbbae66577a5a17f";
+  final API = "";
   String city = "Quibdo";
   
 
